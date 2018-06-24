@@ -19,11 +19,19 @@ var MainLayer = cc.Layer.extend({
     },
 
     initLayout: function(){
-        
+        var frameCache = cc.spriteFrameCache;
+        frameCache.addSpriteFrames(res.number_plist, res.number_png);
+
+        var n0 = new cc.Sprite("#number7.png")
+        n0.x = cc.winSize.width /2;
+        n0.y = cc.winSize.height /2;
+        this.addChild(n0);
+
+
+
     },
 
     update: function(){
-        console.log("OK");
         var title = this.getChildByName("mytitle");
         if (title.x + title.width/2>= cc.winSize.width ||
             title.x - title.width/2<=0){
