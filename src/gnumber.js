@@ -1,5 +1,8 @@
 var MainLayer = cc.Layer.extend({
     sprite:null,
+    nums: new Array(10),
+    back: null,
+    enter: null,
     dx : 4,
     ctor:function () {
         this._super();
@@ -22,10 +25,38 @@ var MainLayer = cc.Layer.extend({
         var frameCache = cc.spriteFrameCache;
         frameCache.addSpriteFrames(res.number_plist, res.number_png);
 
-        var n0 = new cc.Sprite("#number7.png")
-        n0.x = cc.winSize.width /2;
-        n0.y = cc.winSize.height /2;
-        this.addChild(n0);
+        // number key
+        var px, py;
+        for (i = 0; i<this.nums.length; i++){
+            this.nums[i] = new cc.Sprite("#number" + i + ".png");
+
+            if (i==0){
+                px = 3;
+                py = 1;
+            }else{
+                px = (i-1) % 3 + 2;
+                py = parseInt((i-1) / 3) + 2;
+            }
+
+            this.nums[i].x = cc.winSize.width * px /6;
+            this.nums[i].y = cc.winSize.height * py /8;
+
+            this.addChild(this.nums[i]);
+        }
+
+        // enter key
+        this.enter = new cc.Sprite(res.enter_png);
+        this.enter.x = cc.winSize.width * 4 / 6;
+        this.enter.y = cc.winSize.height * 1 / 8;
+        this.addChild(this.enter);
+
+        // back key
+        this.back = new cc.Sprite(res.back_png);
+        this.back.x = cc.winSize.width * 2 / 6;
+        this.back.y = cc.winSize.height * 1 / 8;
+        this.addChild(this.back);
+
+
 
 
 
