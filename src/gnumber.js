@@ -1,8 +1,11 @@
 var MainLayer = cc.Layer.extend({
     sprite:null,
     nums: new Array(10),
+    rects : new Array(10),
     back: null,
     enter: null,
+    input: null,
+    mesg: null,
     dx : 4,
     ctor:function () {
         this._super();
@@ -14,7 +17,7 @@ var MainLayer = cc.Layer.extend({
         this.addChild(title,0,"mytitle");
 
         this.initLayout();
-
+        this.setUpmymouse(this);
 
         this.scheduleUpdate();  // update()
 
@@ -37,9 +40,16 @@ var MainLayer = cc.Layer.extend({
                 px = (i-1) % 3 + 2;
                 py = parseInt((i-1) / 3) + 2;
             }
-
             this.nums[i].x = cc.winSize.width * px /6;
             this.nums[i].y = cc.winSize.height * py /8;
+
+            this.rects[i] = new cc.Rect(
+                this.nums[i].x - this.nums[i].width/2,
+                this.nums[i].y - this.nums[i].height/2,
+                this.nums[i].width,
+                this.nums[i].height
+            );
+
 
             this.addChild(this.nums[i]);
         }
@@ -56,10 +66,41 @@ var MainLayer = cc.Layer.extend({
         this.back.y = cc.winSize.height * 1 / 8;
         this.addChild(this.back);
 
+        this.input = new cc.LabelTTF("","", 48);
+        this.input.x = cc.winSize.width * 3 / 6;
+        this.input.y = cc.winSize.height * 6 / 8;
+        this.addChild(this.input);
+
+        this.mesg = new cc.LabelTTF("輸入三位數","", 48);
+        this.mesg.x = cc.winSize.width * 3 / 6;
+        this.mesg.y = cc.winSize.height * 5 / 8;
+        this.addChild(this.mesg);
 
 
+    },
+
+    setUpmymouse: function(brad){
+        if ('mouse' in cc.sys.capabilities){
+            // define listener object
+            var mouseListener = {
+                event: cc.EventListener.MOUSE,
+                onMouseDown: function (event) {
+                    var x = event.getLocationX();
+                    var y = event.getLocationY();
+                    var point = new cc.Point(x,y);
+
+                    for (i=0; i<brad.rects.length; i++){
+                        if (cc.rectContainsPoint(brad.rects[i],point)){
+                            console.log("press: " + i);
+                            break;
+                        }
+                    }
 
 
+                },
+            };
+            cc.eventManager.addListener(mouseListener,this);
+        }
     },
 
     update: function(){
