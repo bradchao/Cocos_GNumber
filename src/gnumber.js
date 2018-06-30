@@ -106,19 +106,37 @@ var MainLayer = cc.Layer.extend({
                     var y = event.getLocationY();
                     var point = new cc.Point(x,y);
 
-                    if (cc.rectContainsPoint(layer.enterRect, point)){
+                    if (layer.guess.length>0){
+                        // back
+                        if (cc.rectContainsPoint(layer.backRect, point)){
+                            layer.guess =
+                                layer.guess.substr(0,layer.guess.length-1);
+                            layer.input.setString(layer.guess);
+                            return;
+                        }
+
                     }
 
+                    if (layer.guess.length == 3){
+                        // enter
+                        if (cc.rectContainsPoint(layer.enterRect, point)){
+                            cc.log("==> " + layer.guess);
+                        }
+                    }else{
+                        // number
+                        for (var i=0; i<layer.rects.length; i++){
+                            if (cc.rectContainsPoint(layer.rects[i],point)){
+                                console.log("press: " + i);
+                                layer.guess += i;
+                                layer.input.setString(layer.guess);
 
-                    for (i=0; i<layer.rects.length; i++){
-                        if (cc.rectContainsPoint(layer.rects[i],point)){
-                            console.log("press: " + i);
-                            layer.guess += i
-                            layer.input.setString(layer.guess);
-
-                            break;
+                                break;
+                            }
                         }
                     }
+
+
+
 
 
                 },
