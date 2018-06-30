@@ -3,10 +3,14 @@ var MainLayer = cc.Layer.extend({
     nums: new Array(10),
     rects : new Array(10),
     back: null,
+    backRect: null,
     enter: null,
+    enterRect: null,
     input: null,
     mesg: null,
+    guess: "",
     dx : 4,
+    answer: createAnswer(3),
     ctor:function () {
         this._super();
 
@@ -58,12 +62,25 @@ var MainLayer = cc.Layer.extend({
         this.enter = new cc.Sprite(res.enter_png);
         this.enter.x = cc.winSize.width * 4 / 6;
         this.enter.y = cc.winSize.height * 1 / 8;
+        this.enterRect = new cc.Rect(
+            this.enter.x - this.enter.width/2,
+            this.enter.y - this.enter.height/2,
+            this.enter.width,
+            this.enter.height
+        );
         this.addChild(this.enter);
 
         // back key
         this.back = new cc.Sprite(res.back_png);
         this.back.x = cc.winSize.width * 2 / 6;
         this.back.y = cc.winSize.height * 1 / 8;
+        this.backRect = new cc.Rect(
+            this.back.x - this.back.width/2,
+            this.back.y - this.back.height/2,
+            this.back.width,
+            this.back.height
+        );
+
         this.addChild(this.back);
 
         this.input = new cc.LabelTTF("","", 48);
@@ -79,7 +96,7 @@ var MainLayer = cc.Layer.extend({
 
     },
 
-    setUpmymouse: function(brad){
+    setUpmymouse: function(layer){
         if ('mouse' in cc.sys.capabilities){
             // define listener object
             var mouseListener = {
@@ -89,9 +106,16 @@ var MainLayer = cc.Layer.extend({
                     var y = event.getLocationY();
                     var point = new cc.Point(x,y);
 
-                    for (i=0; i<brad.rects.length; i++){
-                        if (cc.rectContainsPoint(brad.rects[i],point)){
+                    if (cc.rectContainsPoint(layer.enterRect, point)){
+                    }
+
+
+                    for (i=0; i<layer.rects.length; i++){
+                        if (cc.rectContainsPoint(layer.rects[i],point)){
                             console.log("press: " + i);
+                            layer.guess += i
+                            layer.input.setString(layer.guess);
+
                             break;
                         }
                     }
@@ -121,4 +145,37 @@ var MainScene = cc.Scene.extend({
         this.addChild(layer);
     }
 });
+
+function myLottery() {
+    var n = new Array(49);
+    for (var i=0; i<n.length; i++) n[i] = i+1;
+    n = shuffle(n);
+    var r = '';
+    for (var i=0; i<6; i++){
+        r += n[i] + ",";
+    }
+    return r;
+}
+
+function createAnswer(d){
+    var n = [0,1,2,3,4,5,6,7,8,9];
+    n = shuffle(n);
+    var r = '';
+    for (var i=0; i<d; i++){
+        r += n[i];
+    }
+    return r;
+}
+
+function shuffle(a){
+    var i,j,x;
+
+    for (i=a.length; i; i--){
+        j = parseInt(Math.random()*i);  // 0-9
+        x = a[i-1];
+        a[i-1] = a[j];
+        a[j] = x;
+    }
+    return a;
+}
 
