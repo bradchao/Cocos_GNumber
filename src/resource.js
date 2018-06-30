@@ -26,6 +26,8 @@ var res = {
     HelloWorld_png : "res/HelloWorld.png",
     back_png : "res/back.png",
     enter_png : "res/enter.png",
+    winner_png : "res/winner.png",
+    loser_png : "res/loser.png",
     number_plist : "res/number.plist",
     number_png : "res/number.png"
 };
